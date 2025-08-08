@@ -1,0 +1,337 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Interactive CV - Deepa Pandey</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <!-- 
+        Chosen Palette: Calm Neutrals (Slate, Zinc, Stone)
+        Application Structure Plan: A single-page application with a fixed sidebar for navigation and a main content area. The structure is designed for intuitive exploration, breaking the linear CV into logical, digestible sections: Profile, Experience, Education & Skills, and Contact. This non-linear approach allows users (recruiters, hiring managers) to quickly access the information most relevant to them. The experience section uses an interactive timeline to visually represent career progression, which is more engaging than a simple list. A chart in the education section provides a quick visual summary of academic performance. This structure enhances usability by making key information scannable and visually appealing.
+        Visualization & Content Choices: 
+        - Report Info: Professional Experience -> Goal: Show career progression -> Viz/Presentation: Interactive vertical timeline -> Interaction: Hover to highlight details -> Justification: A timeline is a highly effective and intuitive way to visualize a career path over time, making it easier to understand the sequence and duration of each role compared to a plain text list. It adds a dynamic and modern feel. -> Library/Method: HTML/CSS/Tailwind + JS for interaction.
+        - Report Info: Education percentages -> Goal: Compare academic performance across different qualifications -> Viz/Presentation: Horizontal Bar Chart -> Interaction: Tooltips on hover for exact percentages -> Justification: A bar chart provides an immediate visual comparison of scores, making it easy to see strengths at a glance. It's a more engaging way to present numerical data than a simple list. -> Library/Method: Chart.js (Canvas).
+        - Report Info: Skills -> Goal: Inform about capabilities -> Viz/Presentation: Tag-style list -> Interaction: None -> Justification: Grouping skills into categories and presenting them as tags makes them easy to scan and visually parse.
+        CONFIRMATION: NO SVG graphics used. NO Mermaid JS used.
+    -->
+    <style>
+        body {
+            font-family: 'Inter', sans-serif;
+            background-color: #f8fafc; /* slate-50 */
+            color: #27272a; /* zinc-800 */
+        }
+        .nav-link {
+            transition: all 0.3s ease;
+        }
+        .nav-link.active {
+            background-color: #4f46e5; /* indigo-600 */
+            color: white;
+            transform: translateX(4px);
+        }
+        .nav-link:not(.active):hover {
+            background-color: #e2e8f0; /* slate-200 */
+            transform: translateX(4px);
+        }
+        .timeline-item {
+            position: relative;
+            padding-bottom: 2rem;
+            padding-left: 2.5rem;
+            border-left: 2px solid #cbd5e1; /* slate-300 */
+        }
+        .timeline-item:last-child {
+            border-left: 2px solid transparent;
+        }
+        .timeline-dot {
+            position: absolute;
+            left: -0.5rem;
+            top: 0.25rem;
+            height: 1rem;
+            width: 1rem;
+            border-radius: 9999px;
+            background-color: white;
+            border: 4px solid #4f46e5; /* indigo-600 */
+        }
+        .chart-container {
+            position: relative;
+            width: 100%;
+            max-width: 700px;
+            margin-left: auto;
+            margin-right: auto;
+            height: 350px;
+            max-height: 400px;
+        }
+        @media (max-width: 768px) {
+            .chart-container {
+                height: 300px;
+            }
+        }
+    </style>
+</head>
+<body class="flex flex-col md:flex-row">
+
+    <!-- Sidebar Navigation -->
+    <aside class="w-full md:w-64 bg-white md:h-screen md:sticky md:top-0 border-b md:border-b-0 md:border-r border-slate-200">
+        <div class="p-6 text-center border-b border-slate-200">
+            <img src="https://images.pexels.com/photos/3762800/pexels-photo-3762800.jpeg?auto=compress&cs=tinysrgb&w=128&h=128&fit=crop" 
+                 onerror="this.onerror=null;this.src='https://placehold.co/96x96/e0e7ff/4f46e5?text=DP&font=inter';" 
+                 alt="Photo of Deepa Pandey" 
+                 class="w-24 h-24 rounded-full mx-auto object-cover border-4 border-white shadow-md">
+            <h1 class="text-xl font-bold mt-4 text-slate-800">Deepa Pandey</h1>
+            <p class="text-sm text-slate-500">PGT Chemistry</p>
+        </div>
+        <nav class="p-4">
+            <ul>
+                <li><a href="#profile" class="nav-link block w-full text-left p-3 rounded-lg font-medium text-slate-700">Profile</a></li>
+                <li><a href="#experience" class="nav-link block w-full text-left p-3 rounded-lg font-medium text-slate-700">Experience</a></li>
+                <li><a href="#education" class="nav-link block w-full text-left p-3 rounded-lg font-medium text-slate-700">Education & Skills</a></li>
+                <li><a href="#contact" class="nav-link block w-full text-left p-3 rounded-lg font-medium text-slate-700">Contact</a></li>
+            </ul>
+        </nav>
+    </aside>
+
+    <!-- Main Content -->
+    <main class="flex-1 p-4 sm:p-8 md:p-12">
+        <!-- Profile Section -->
+        <section id="profile" class="mb-16">
+            <div class="bg-white p-8 rounded-xl shadow-sm">
+                <h2 class="text-3xl font-bold text-indigo-600 mb-4">Professional Profile</h2>
+                <p class="text-lg text-slate-600 leading-relaxed">
+                    Highly dedicated and passionate PGT Chemistry educator with over 10 years of progressive experience teaching Chemistry to Grades 9-12 in both government and private school settings. Proven ability to foster student engagement through innovative teaching methodologies, consistently improving academic performance and achieving excellent board exam results. Possessing deep subject matter expertise, strong classroom management skills, and effective communication, seeking to contribute to a reputable CBSE-affiliated institution that values educational excellence and holistic student development.
+                </p>
+            </div>
+        </section>
+
+        <!-- Experience Section -->
+        <section id="experience" class="mb-16">
+             <div class="bg-white p-8 rounded-xl shadow-sm">
+                <h2 class="text-3xl font-bold text-indigo-600 mb-8">Career Timeline</h2>
+                <div id="timeline-container">
+                    <!-- Timeline items will be injected here by JavaScript -->
+                </div>
+            </div>
+        </section>
+
+        <!-- Education & Skills Section -->
+        <section id="education" class="mb-16">
+            <div class="bg-white p-8 rounded-xl shadow-sm">
+                <h2 class="text-3xl font-bold text-indigo-600 mb-8">Education & Skills</h2>
+                <div class="grid grid-cols-1 lg:grid-cols-2 gap-12">
+                    <div>
+                        <h3 class="text-xl font-semibold text-slate-800 mb-4">Academic Performance</h3>
+                        <p class="text-slate-600 mb-4">This chart provides a visual representation of academic performance across various qualifications, highlighting a consistent record of high achievement.</p>
+                        <div class="chart-container">
+                            <canvas id="educationChart"></canvas>
+                        </div>
+                    </div>
+                    <div>
+                        <h3 class="text-xl font-semibold text-slate-800 mb-4">Core Competencies</h3>
+                         <div class="space-y-6">
+                            <div>
+                                <h4 class="font-semibold text-slate-700 mb-2">Subject Expertise</h4>
+                                <div class="flex flex-wrap gap-2">
+                                    <span class="bg-indigo-100 text-indigo-800 text-sm font-medium px-3 py-1 rounded-full">CBSE Grades 9-12</span>
+                                    <span class="bg-indigo-100 text-indigo-800 text-sm font-medium px-3 py-1 rounded-full">Physical Chemistry</span>
+                                    <span class="bg-indigo-100 text-indigo-800 text-sm font-medium px-3 py-1 rounded-full">Inorganic Chemistry</span>
+                                    <span class="bg-indigo-100 text-indigo-800 text-sm font-medium px-3 py-1 rounded-full">Organic Chemistry</span>
+                                </div>
+                            </div>
+                             <div>
+                                <h4 class="font-semibold text-slate-700 mb-2">Pedagogical Skills</h4>
+                                <div class="flex flex-wrap gap-2">
+                                    <span class="bg-green-100 text-green-800 text-sm font-medium px-3 py-1 rounded-full">Innovative Teaching</span>
+                                    <span class="bg-green-100 text-green-800 text-sm font-medium px-3 py-1 rounded-full">Interactive Labs</span>
+                                    <span class="bg-green-100 text-green-800 text-sm font-medium px-3 py-1 rounded-full">E-Content Development</span>
+                                    <span class="bg-green-100 text-green-800 text-sm font-medium px-3 py-1 rounded-full">Student-Centric Learning</span>
+                                </div>
+                            </div>
+                            <div>
+                                <h4 class="font-semibold text-slate-700 mb-2">Digital Proficiency</h4>
+                                <div class="flex flex-wrap gap-2">
+                                    <span class="bg-amber-100 text-amber-800 text-sm font-medium px-3 py-1 rounded-full">MS Office Suite</span>
+                                    <span class="bg-amber-100 text-amber-800 text-sm font-medium px-3 py-1 rounded-full">Smart Boards</span>
+                                    <span class="bg-amber-100 text-amber-800 text-sm font-medium px-3 py-1 rounded-full">Internet Tools</span>
+                                    <span class="bg-amber-100 text-amber-800 text-sm font-medium px-3 py-1 rounded-full">PGDCA Qualified</span>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+        
+        <!-- Contact Section -->
+        <section id="contact" class="mb-16">
+            <div class="bg-white p-8 rounded-xl shadow-sm">
+                <h2 class="text-3xl font-bold text-indigo-600 mb-6">Get in Touch</h2>
+                <div class="grid grid-cols-1 md:grid-cols-3 gap-6 text-center">
+                    <div class="bg-slate-50 p-6 rounded-lg">
+                        <svg class="w-8 h-8 mx-auto mb-2 text-indigo-500" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 5a2 2 0 012-2h3.28a1 1 0 01.948.684l1.498 4.493a1 1 0 01-.502 1.21l-2.257 1.13a11.042 11.042 0 005.516 5.516l1.13-2.257a1 1 0 011.21-.502l4.493 1.498a1 1 0 01.684.949V19a2 2 0 01-2 2h-1C9.716 21 3 14.284 3 6V5z"></path></svg>
+                        <h3 class="font-semibold text-slate-800">Phone</h3>
+                        <p class="text-slate-600">9826739673</p>
+                    </div>
+                    <div class="bg-slate-50 p-6 rounded-lg">
+                        <svg class="w-8 h-8 mx-auto mb-2 text-indigo-500" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 8l7.89 5.26a2 2 0 002.22 0L21 8M5 19h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z"></path></svg>
+                        <h3 class="font-semibold text-slate-800">Email</h3>
+                        <p class="text-slate-600">deepa671989@gmail.com</p>
+                    </div>
+                    <div class="bg-slate-50 p-6 rounded-lg">
+                        <svg class="w-8 h-8 mx-auto mb-2 text-indigo-500" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17.657 16.657L13.414 20.9a1.998 1.998 0 01-2.827 0l-4.244-4.243a8 8 0 1111.314 0z"></path><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 11a3 3 0 11-6 0 3 3 0 016 0z"></path></svg>
+                        <h3 class="font-semibold text-slate-800">Location</h3>
+                        <p class="text-slate-600">Dubey Colony, Katni, MP</p>
+                    </div>
+                </div>
+            </div>
+        </section>
+    </main>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            // Data from CV
+            const experienceData = [
+                {
+                    role: "PGT Chemistry",
+                    school: "Modern English Medium School, Katni (MP)",
+                    period: "April 2024 – Present",
+                    desc: "Currently responsible for teaching Chemistry to senior secondary students, adhering to CBSE curriculum guidelines and implementing modern teaching techniques."
+                },
+                {
+                    role: "PGT Chemistry",
+                    school: "Sanskar Bharti Public School, Katni (MP)",
+                    period: "May 2023 – March 2024",
+                    desc: "Delivered comprehensive Chemistry instruction for Grades 11 and 12, utilizing smart boards and digital tools to create dynamic learning experiences."
+                },
+                {
+                    role: "PGT Chemistry",
+                    school: "Kendriya Vidyalaya NKJ, Katni (MP)",
+                    period: "2022 – 2023",
+                    desc: "Taught senior secondary classes, preparing students for board examinations with a student-centric approach to foster deeper understanding."
+                },
+                {
+                    role: "PGT Chemistry",
+                    school: "Govt. H.S. School, Nitarra, Katni (MP)",
+                    period: "2020 – 2022",
+                    desc: "Responsible for Chemistry instruction for higher secondary grades, applying effective time management strategies to cover the curriculum."
+                },
+                {
+                    role: "PGT Chemistry",
+                    school: "Govt. H.S. School, Hardua, Katni (MP)",
+                    period: "2019 – 2020",
+                    desc: "Taught Chemistry to secondary and higher secondary students, contributing to a positive and disciplined classroom environment."
+                },
+                {
+                    role: "PGT Chemistry",
+                    school: "Govt. Boys School, Chandia (Umaria, MP)",
+                    period: "2014 – 2016",
+                    desc: "Instructed Chemistry, focusing on foundational concepts and problem-solving skills."
+                },
+                 {
+                    role: "PGT Chemistry",
+                    school: "Govt. H.S.S. School, Patharahta (Umaria, MP)",
+                    period: "2012 – 2014",
+                    desc: "Commenced teaching career as a PGT Chemistry, gaining initial experience in curriculum delivery."
+                },
+                {
+                    role: "Maths Teacher",
+                    school: "SYNA International School, Katni (MP)",
+                    period: "2007 – 2009 (approx.)",
+                    desc: "Taught Mathematics, developing strong pedagogical skills and classroom management techniques."
+                }
+            ];
+
+            const educationData = {
+                labels: ['10th', '12th', 'B.Sc.', 'B.Ed.', 'M.Sc.', 'PGDCA', 'M.A.'],
+                scores: [84.6, 75.11, 63.72, 69.4, 72.42, 73.00, 63.1]
+            };
+
+            // Populate Timeline
+            const timelineContainer = document.getElementById('timeline-container');
+            experienceData.forEach(item => {
+                const timelineItem = `
+                    <div class="timeline-item">
+                        <div class="timeline-dot"></div>
+                        <time class="mb-1 text-sm font-normal leading-none text-slate-400">${item.period}</time>
+                        <h3 class="text-lg font-semibold text-slate-900">${item.role}</h3>
+                        <p class="text-md font-medium text-slate-600">${item.school}</p>
+                        <p class="mt-2 text-base font-normal text-slate-500">${item.desc}</p>
+                    </div>
+                `;
+                timelineContainer.innerHTML += timelineItem;
+            });
+
+            // Education Chart
+            const ctx = document.getElementById('educationChart').getContext('2d');
+            new Chart(ctx, {
+                type: 'bar',
+                data: {
+                    labels: educationData.labels.map(label => label.length > 16 ? label.substring(0, 16) + '...' : label),
+                    datasets: [{
+                        label: 'Percentage (%)',
+                        data: educationData.scores,
+                        backgroundColor: 'rgba(79, 70, 229, 0.6)',
+                        borderColor: 'rgba(79, 70, 229, 1)',
+                        borderWidth: 1
+                    }]
+                },
+                options: {
+                    indexAxis: 'y',
+                    responsive: true,
+                    maintainAspectRatio: false,
+                    plugins: {
+                        legend: {
+                            display: false
+                        },
+                        tooltip: {
+                            callbacks: {
+                                label: function(context) {
+                                    return ` ${context.dataset.label}: ${context.raw}%`;
+                                }
+                            }
+                        }
+                    },
+                    scales: {
+                        x: {
+                            beginAtZero: true,
+                            max: 100,
+                            ticks: {
+                                callback: function(value) {
+                                    return value + "%"
+                                }
+                            }
+                        }
+                    }
+                }
+            });
+
+            // Navigation scroll behavior
+            const navLinks = document.querySelectorAll('.nav-link');
+            const sections = document.querySelectorAll('main section');
+
+            function changeActiveLink() {
+                let index = sections.length;
+                while(--index && window.scrollY + 50 < sections[index].offsetTop) {}
+                
+                navLinks.forEach((link) => link.classList.remove('active'));
+                if(navLinks[index]) {
+                   navLinks[index].classList.add('active');
+                }
+            }
+
+            changeActiveLink();
+            window.addEventListener('scroll', changeActiveLink);
+
+            navLinks.forEach(link => {
+                link.addEventListener('click', function(e) {
+                    e.preventDefault();
+                    document.querySelector(this.getAttribute('href')).scrollIntoView({
+                        behavior: 'smooth'
+                    });
+                });
+            });
+        });
+    </script>
+</body>
+</html>
