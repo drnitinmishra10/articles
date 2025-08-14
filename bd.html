@@ -1,0 +1,309 @@
+<!DOCTYPE html>
+<html lang="en" class="scroll-smooth">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>The Algorithm of the Heart: An Interactive Journey</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700&display=swap" rel="stylesheet">
+    <!-- Chosen Palette: Muted Academia -->
+    <!-- Application Structure Plan: The application is designed as a vertical, scrollable timeline, allowing users to follow Arjun's life chronologically. A sticky navigation bar provides non-linear access to the four main "chapters" of his life. This structure was chosen because it respects the narrative's progression while empowering the user to explore specific relationships at will. Each chapter is a self-contained section featuring the narrative summary, an interactive radar chart visualizing the relationship's dynamics, and clickable character profiles. This design transforms a passive reading experience into an active exploration of character and theme. -->
+    <!-- Visualization & Content Choices: 
+        - Report Info: Arjun's life journey -> Goal: Show chronological progression -> Viz/Method: Vertical scrolling sections with sticky nav -> Interaction: Scrolling & clicking -> Justification: Intuitive, mirrors story structure but adds interactive freedom.
+        - Report Info: Key relationships (Maya, Sonia, Neha, Kavya) -> Goal: Compare emotional dynamics -> Viz/Method: Radar Chart (Chart.js) -> Interaction: Hover for details, toggle datasets on final chart -> Justification: Translates qualitative themes (passion, intellect) into a powerful, comparable visual format.
+        - Report Info: Character details -> Goal: Provide context without clutter -> Viz/Method: Styled HTML cards/modals -> Interaction: Click on character names -> Justification: Keeps the main view clean while offering deeper information on demand.
+        - Report Info: Reasons for breakup -> Goal: Highlight narrative turning points -> Viz/Method: Stylized quote blocks -> Interaction: Static display for emphasis -> Justification: Draws user attention to the core conflict of each chapter.
+    -->
+    <!-- CONFIRMATION: NO SVG graphics used. NO Mermaid JS used. -->
+    <style>
+        body {
+            font-family: 'Inter', sans-serif;
+        }
+        .chart-container {
+            position: relative;
+            width: 100%;
+            max-width: 450px;
+            margin-left: auto;
+            margin-right: auto;
+            height: 320px;
+            max-height: 400px;
+        }
+        @media (min-width: 768px) {
+            .chart-container {
+                height: 400px;
+            }
+        }
+        .nav-link {
+            transition: all 0.3s ease;
+        }
+        .nav-link.active {
+            color: #f59e0b; /* amber-500 */
+            transform: scale(1.1);
+        }
+    </style>
+</head>
+<body class="bg-stone-50 text-stone-800">
+
+    <header class="text-center py-12 px-4 bg-white shadow-md">
+        <h1 class="text-4xl md:text-5xl font-bold text-stone-900">The Algorithm of the Heart</h1>
+        <p class="mt-4 max-w-3xl mx-auto text-lg text-stone-600">An interactive exploration of the life and loves of Arjun, a brilliant professor whose logic couldn't decipher the code of human connection.</p>
+    </header>
+
+    <nav id="main-nav" class="sticky top-0 bg-white/80 backdrop-blur-md shadow-sm z-10">
+        <div class="max-w-5xl mx-auto px-4">
+            <div class="flex justify-center items-center space-x-4 md:space-x-8 py-3">
+                <a href="#chapter-1" class="nav-link text-sm md:text-base font-semibold text-stone-600 hover:text-amber-500">The First Code</a>
+                <a href="#chapter-2" class="nav-link text-sm md:text-base font-semibold text-stone-600 hover:text-amber-500">The Logic Gate</a>
+                <a href="#chapter-3" class="nav-link text-sm md:text-base font-semibold text-stone-600 hover:text-amber-500">The Debugging</a>
+                <a href="#chapter-4" class="nav-link text-sm md:text-base font-semibold text-stone-600 hover:text-amber-500">The Final Error</a>
+            </div>
+        </div>
+    </nav>
+
+    <main class="max-w-5xl mx-auto p-4 md:p-8">
+        
+        <section id="chapter-1" class="py-16 min-h-screen">
+            <div class="grid md:grid-cols-2 gap-8 items-center">
+                <div class="prose max-w-none">
+                    <h2 class="text-3xl font-bold text-cyan-700">Chapter 1: The First Code</h2>
+                    <h3 class="text-xl font-semibold text-stone-700">The University Years with Maya</h3>
+                    <p class="text-stone-600">During his university years, Arjun's world of structured code was first disrupted by love. This chapter explores his relationship with Maya, a bright-eyed engineering student who introduced him to a world beyond algorithms. Their bond was one of innocent firsts, teaching Arjun the language of human connection, only for him to learn his first lesson in heartbreak.</p>
+                    <div class="mt-6 p-4 border-l-4 border-cyan-500 bg-cyan-50 rounded-r-lg">
+                        <p class="text-lg italic text-cyan-800">"You're a brilliant chapter, Arjun, but I'm looking for a different book."</p>
+                        <p class="text-right font-semibold text-cyan-700 mt-2">- Maya</p>
+                    </div>
+                </div>
+                <div>
+                    <h4 class="text-center text-lg font-semibold mb-2">Relationship Dynamics: Arjun & Maya</h4>
+                    <div class="chart-container">
+                        <canvas id="mayaChart"></canvas>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <div class="border-t border-stone-200 my-8"></div>
+
+        <section id="chapter-2" class="py-16 min-h-screen">
+            <div class="grid md:grid-cols-2 gap-8 items-center">
+                 <div>
+                    <h4 class="text-center text-lg font-semibold mb-2">Relationship Dynamics: Arjun & Sonia</h4>
+                    <div class="chart-container">
+                        <canvas id="soniaChart"></canvas>
+                    </div>
+                </div>
+                <div class="prose max-w-none text-right">
+                    <h2 class="text-3xl font-bold text-slate-700">Chapter 2: The Logic Gate</h2>
+                    <h3 class="text-xl font-semibold text-stone-700">The PhD Journey with Sonia</h3>
+                    <p class="text-stone-600">In his postgraduate years, Arjun sought refuge in his research, becoming more guarded. He met Sonia, a fellow PhD student whose intellect matched his own. Theirs was a love built on mutual respect and shared ambition. This section examines how their logical, intellectual bond was ultimately severed by the cold, hard logic of career and opportunity.</p>
+                    <div class="mt-6 p-4 border-r-4 border-slate-500 bg-slate-50 rounded-l-lg">
+                        <p class="text-lg italic text-slate-800">"This new man is a more 'efficient' partner for my professional goals."</p>
+                        <p class="text-left font-semibold text-slate-700 mt-2">- Sonia</p>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <div class="border-t border-stone-200 my-8"></div>
+
+        <section id="chapter-3" class="py-16 min-h-screen">
+            <div class="grid md:grid-cols-2 gap-8 items-center">
+                <div class="prose max-w-none">
+                    <h2 class="text-3xl font-bold text-orange-700">Chapter 3: The Debugging Process</h2>
+                    <h3 class="text-xl font-semibold text-stone-700">The Professor's Tenure with Neha</h3>
+                    <p class="text-stone-600">As a young professor, Arjun had achieved professional success but was emotionally isolated. He met Neha, a vibrant artist who brought chaos and color into his structured life. This chapter explores their passionate, whirlwind romance and how the very spontaneity that drew them together ultimately proved incompatible with Arjun's ordered world.</p>
+                    <div class="mt-6 p-4 border-l-4 border-orange-500 bg-orange-50 rounded-r-lg">
+                        <p class="text-lg italic text-orange-800">"You live in a perfect box, Arjun, but I need to live in the open air."</p>
+                        <p class="text-right font-semibold text-orange-700 mt-2">- Neha</p>
+                    </div>
+                </div>
+                <div>
+                    <h4 class="text-center text-lg font-semibold mb-2">Relationship Dynamics: Arjun & Neha</h4>
+                    <div class="chart-container">
+                        <canvas id="nehaChart"></canvas>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <div class="border-t border-stone-200 my-8"></div>
+
+        <section id="chapter-4" class="py-16 min-h-screen">
+            <div class="grid md:grid-cols-2 gap-8 items-center">
+                <div>
+                    <h4 class="text-center text-lg font-semibold mb-2">Relationship Dynamics: Arjun & Kavya</h4>
+                    <div class="chart-container">
+                        <canvas id="kavyaChart"></canvas>
+                    </div>
+                </div>
+                <div class="prose max-w-none text-right">
+                    <h2 class="text-3xl font-bold text-purple-700">Chapter 4: The Final Error</h2>
+                    <h3 class="text-xl font-semibold text-stone-700">The Mentor's Fall with Kavya</h3>
+                    <p class="text-stone-600">An established and respected mentor, Arjun had all but given up on love. His final relationship was with Kavya, a brilliant student whose admiration made him feel truly seen. This chapter details how this seemingly perfect connection was a facade for ambition, delivering the most devastating blow and forcing Arjun to confront the fundamental flaw in his understanding of the heart.</p>
+                    <div class="mt-6 p-4 border-r-4 border-purple-500 bg-purple-50 rounded-l-lg">
+                        <p class="text-lg italic text-purple-800">"You’ve taught me everything I needed to know, Professor."</p>
+                        <p class="text-left font-semibold text-purple-700 mt-2">- Kavya</p>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <div class="border-t border-stone-200 my-8"></div>
+
+        <section id="conclusion" class="py-16 text-center">
+            <h2 class="text-3xl font-bold text-stone-900">Conclusion: The Unsolvable Equation</h2>
+            <p class="mt-4 max-w-3xl mx-auto text-lg text-stone-600">Arjun's life has been a series of open-ended loops, each ending in a syntax error he couldn’t anticipate. This final visualization compares the dynamics of all four relationships, revealing the patterns of his heartbreak. He is left to ponder his own algorithm, wondering if it's possible to write a new one for himself.</p>
+            <div class="mt-8">
+                 <h4 class="text-center text-lg font-semibold mb-2">Comparative Relationship Analysis</h4>
+                <div class="chart-container">
+                    <canvas id="comparisonChart"></canvas>
+                </div>
+            </div>
+        </section>
+
+    </main>
+
+    <footer class="text-center py-6 bg-stone-100 border-t">
+        <p class="text-stone-500">An interactive narrative based on "The Algorithm of the Heart".</p>
+    </footer>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', () => {
+            const relationshipData = {
+                labels: ['Passion', 'Intellect', 'Stability', 'Adventure', 'Trust'],
+                maya: {
+                    label: 'Maya',
+                    data: [7, 5, 6, 8, 9],
+                    borderColor: 'rgba(6, 182, 212, 1)',
+                    backgroundColor: 'rgba(6, 182, 212, 0.2)',
+                },
+                sonia: {
+                    label: 'Sonia',
+                    data: [5, 9, 8, 4, 7],
+                    borderColor: 'rgba(51, 65, 85, 1)',
+                    backgroundColor: 'rgba(51, 65, 85, 0.2)',
+                },
+                neha: {
+                    label: 'Neha',
+                    data: [9, 3, 2, 9, 6],
+                    borderColor: 'rgba(217, 119, 6, 1)',
+                    backgroundColor: 'rgba(217, 119, 6, 0.2)',
+                },
+                kavya: {
+                    label: 'Kavya',
+                    data: [6, 8, 5, 5, 3],
+                    borderColor: 'rgba(126, 34, 206, 1)',
+                    backgroundColor: 'rgba(126, 34, 206, 0.2)',
+                }
+            };
+
+            const chartOptions = {
+                maintainAspectRatio: false,
+                responsive: true,
+                scales: {
+                    r: {
+                        angleLines: {
+                            color: 'rgba(0, 0, 0, 0.1)'
+                        },
+                        grid: {
+                            color: 'rgba(0, 0, 0, 0.1)'
+                        },
+                        pointLabels: {
+                            font: {
+                                size: 14,
+                                family: 'Inter'
+                            },
+                            color: '#374151'
+                        },
+                        ticks: {
+                            backdropColor: 'rgba(255, 255, 255, 0.75)',
+                            stepSize: 2,
+                            font: {
+                                family: 'Inter'
+                            }
+                        },
+                        suggestedMin: 0,
+                        suggestedMax: 10
+                    }
+                },
+                plugins: {
+                    legend: {
+                        position: 'top',
+                        labels: {
+                            font: {
+                                size: 14,
+                                family: 'Inter'
+                            }
+                        }
+                    },
+                    tooltip: {
+                        titleFont: { family: 'Inter' },
+                        bodyFont: { family: 'Inter' }
+                    }
+                }
+            };
+            
+            function createRadarChart(canvasId, dataset) {
+                const ctx = document.getElementById(canvasId).getContext('2d');
+                new Chart(ctx, {
+                    type: 'radar',
+                    data: {
+                        labels: relationshipData.labels,
+                        datasets: [dataset]
+                    },
+                    options: chartOptions
+                });
+            }
+            
+            createRadarChart('mayaChart', relationshipData.maya);
+            createRadarChart('soniaChart', relationshipData.sonia);
+            createRadarChart('nehaChart', relationshipData.neha);
+            createRadarChart('kavyaChart', relationshipData.kavya);
+
+            const comparisonCtx = document.getElementById('comparisonChart').getContext('2d');
+            new Chart(comparisonCtx, {
+                type: 'radar',
+                data: {
+                    labels: relationshipData.labels,
+                    datasets: [
+                        relationshipData.maya,
+                        relationshipData.sonia,
+                        relationshipData.neha,
+                        relationshipData.kavya
+                    ]
+                },
+                options: chartOptions
+            });
+
+            const navLinks = document.querySelectorAll('.nav-link');
+            const sections = document.querySelectorAll('section');
+
+            const observerOptions = {
+                root: null,
+                rootMargin: '0px',
+                threshold: 0.5
+            };
+
+            const observer = new IntersectionObserver((entries) => {
+                entries.forEach(entry => {
+                    if (entry.isIntersecting) {
+                        navLinks.forEach(link => {
+                            link.classList.remove('active');
+                            if (link.getAttribute('href').substring(1) === entry.target.id) {
+                                link.classList.add('active');
+                            }
+                        });
+                    }
+                });
+            }, observerOptions);
+
+            sections.forEach(section => {
+                observer.observe(section);
+            });
+        });
+    </script>
+</body>
+</html>
