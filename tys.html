@@ -1,0 +1,223 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>The Yoga Sanctuary</title>
+    <!-- Tailwind CSS CDN -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap');
+
+        body {
+            font-family: 'Inter', sans-serif;
+            background-color: #f7f3e8;
+            /* Soft, earthy background */
+        }
+    </style>
+</head>
+
+<body class="text-gray-800">
+
+    <!-- Header & Navigation -->
+    <header class="bg-white sticky top-0 z-50 shadow-md">
+        <nav class="container mx-auto px-6 py-4 flex justify-between items-center">
+            <a href="#" class="text-2xl font-bold text-gray-800 rounded-lg p-2 transition-transform duration-300 hover:scale-105">
+                The Yoga Sanctuary
+            </a>
+            <div class="hidden md:flex space-x-8 text-lg font-medium">
+                <a href="#about" class="text-gray-600 hover:text-green-700 transition duration-300">About</a>
+                <a href="#classes" class="text-gray-600 hover:text-green-700 transition duration-300">Classes</a>
+                <a href="#schedule" class="text-gray-600 hover:text-green-700 transition duration-300">Schedule & Pricing</a>
+                <a href="#contact" class="text-gray-600 hover:text-green-700 transition duration-300">Contact</a>
+            </div>
+            <!-- Mobile Menu Button -->
+            <button id="mobile-menu-btn" class="md:hidden text-gray-600 focus:outline-none">
+                <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16m-7 6h7" />
+                </svg>
+            </button>
+        </nav>
+
+        <!-- Mobile Menu (hidden by default) -->
+        <div id="mobile-menu" class="hidden md:hidden bg-white px-6 py-4 shadow-lg">
+            <div class="flex flex-col space-y-4 text-lg font-medium text-center">
+                <a href="#about" class="block text-gray-600 hover:text-green-700 transition duration-300">About</a>
+                <a href="#classes" class="block text-gray-600 hover:text-green-700 transition duration-300">Classes</a>
+                <a href="#schedule" class="block text-gray-600 hover:text-green-700 transition duration-300">Schedule & Pricing</a>
+                <a href="#contact" class="block text-gray-600 hover:text-green-700 transition duration-300">Contact</a>
+            </div>
+        </div>
+    </header>
+
+    <!-- Hero Section -->
+    <section class="relative h-screen flex items-center justify-center text-center p-6 bg-cover bg-center" style="background-image: url('https://placehold.co/1920x1080/c8e6c9/000000?text=Peaceful+Yoga+Setting');">
+        <div class="absolute inset-0 bg-gray-900 opacity-30"></div>
+        <div class="relative z-10 text-white max-w-4xl mx-auto">
+            <h1 class="text-4xl md:text-6xl font-bold mb-4 drop-shadow-xl">Find Your Inner Calm</h1>
+            <p class="text-lg md:text-xl font-light mb-8 drop-shadow-lg">
+                The Yoga Sanctuary is a space for mindful movement, deep breathing, and self-discovery.
+                Join our online community and begin your journey to a more balanced life.
+            </p>
+            <a href="#classes" class="bg-white text-green-800 font-bold py-3 px-8 rounded-full shadow-lg transition transform duration-300 hover:scale-105 hover:bg-gray-100">
+                Explore Our Classes
+            </a>
+        </div>
+    </section>
+
+    <!-- About Us Section -->
+    <section id="about" class="py-20 bg-white">
+        <div class="container mx-auto px-6 grid md:grid-cols-2 gap-12 items-center">
+            <div class="flex justify-center">
+                <img src="https://placehold.co/600x400/b1c4b1/ffffff?text=Mindful+Practitioner" alt="Mindful yoga practitioner" class="rounded-lg shadow-xl w-full max-w-xl">
+            </div>
+            <div>
+                <h2 class="text-4xl font-bold mb-4 text-green-800">Our Philosophy</h2>
+                <p class="text-gray-700 leading-relaxed mb-4">
+                    At The Yoga Sanctuary, we believe that yoga is for every body. Our classes are designed to be
+                    inclusive and accessible, regardless of your experience level. We focus on creating a safe,
+                    supportive environment where you can connect with your breath and move with intention.
+                </p>
+                <p class="text-gray-700 leading-relaxed">
+                    Our online platform brings the peace of the studio directly to your home. We offer a variety of
+                    styles, from gentle, restorative flows to dynamic, strength-building practices, all led by
+                    passionate and certified instructors.
+                </p>
+            </div>
+        </div>
+    </section>
+
+    <!-- Classes Section -->
+    <section id="classes" class="py-20 bg-f7f3e8">
+        <div class="container mx-auto px-6 text-center">
+            <h2 class="text-4xl font-bold mb-12 text-green-800">Our Classes</h2>
+            <div class="grid md:grid-cols-3 gap-8">
+                <!-- Class 1: Vinyasa Flow -->
+                <div class="bg-white p-8 rounded-lg shadow-xl transition transform duration-300 hover:scale-105">
+                    <svg xmlns="http://www.w3.org/2000/svg" class="h-16 w-16 mx-auto mb-4 text-green-600" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 10V3L4 14h7v7l9-11h-7z" />
+                    </svg>
+                    <h3 class="text-2xl font-semibold mb-2">Vinyasa Flow</h3>
+                    <p class="text-gray-600">
+                        A dynamic, flowing practice that links breath to movement. Build strength, flexibility, and
+                        endurance in this invigorating class.
+                    </p>
+                </div>
+                <!-- Class 2: Restorative Yoga -->
+                <div class="bg-white p-8 rounded-lg shadow-xl transition transform duration-300 hover:scale-105">
+                    <svg xmlns="http://www.w3.org/2000/svg" class="h-16 w-16 mx-auto mb-4 text-green-600" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4l3 3m-4.5 7h4.5a2 2 0 002-2V9a2 2 0 00-2-2H9a2 2 0 00-2 2v6a2 2 0 002 2z" />
+                    </svg>
+                    <h3 class="text-2xl font-semibold mb-2">Restorative Yoga</h3>
+                    <p class="text-gray-600">
+                        Gentle and meditative, this class uses props to support the body, allowing for deep relaxation
+                        and stress relief.
+                    </p>
+                </div>
+                <!-- Class 3: Hatha Basics -->
+                <div class="bg-white p-8 rounded-lg shadow-xl transition transform duration-300 hover:scale-105">
+                    <svg xmlns="http://www.w3.org/2000/svg" class="h-16 w-16 mx-auto mb-4 text-green-600" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m5.6 5.6a9 9 0 11-12.72 0 9 9 0 0112.72 0z" />
+                    </svg>
+                    <h3 class="text-2xl font-semibold mb-2">Hatha Basics</h3>
+                    <p class="text-gray-600">
+                        Perfect for beginners, this class focuses on foundational poses and alignment, building a
+                        strong understanding of the practice.
+                    </p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Schedule & Pricing Section -->
+    <section id="schedule" class="py-20 bg-white">
+        <div class="container mx-auto px-6 text-center">
+            <h2 class="text-4xl font-bold mb-12 text-green-800">Schedule & Pricing</h2>
+            <div class="grid md:grid-cols-2 gap-8 max-w-4xl mx-auto">
+                <!-- Schedule -->
+                <div class="bg-gray-100 p-8 rounded-lg shadow-xl">
+                    <h3 class="text-2xl font-semibold mb-4">Weekly Schedule</h3>
+                    <ul class="text-left text-gray-700 space-y-3">
+                        <li><span class="font-bold">Monday, 7 PM:</span> Vinyasa Flow with Jane</li>
+                        <li><span class="font-bold">Wednesday, 8 AM:</span> Restorative Yoga with Alex</li>
+                        <li><span class="font-bold">Friday, 6 PM:</span> Hatha Basics with Sarah</li>
+                        <li><span class="font-bold">Saturday, 10 AM:</span> Mindful Meditation with Jane</li>
+                    </ul>
+                </div>
+                <!-- Pricing -->
+                <div class="bg-gray-100 p-8 rounded-lg shadow-xl">
+                    <h3 class="text-2xl font-semibold mb-4">Pricing Plans</h3>
+                    <ul class="text-left text-gray-700 space-y-3">
+                        <li><span class="font-bold">Single Class:</span> $15</li>
+                        <li><span class="font-bold">5-Class Pass:</span> $65</li>
+                        <li><span class="font-bold">Monthly Unlimited:</span> $80</li>
+                    </ul>
+                    <a href="#" class="inline-block mt-6 bg-green-800 text-white font-bold py-3 px-6 rounded-full shadow-lg transition transform duration-300 hover:scale-105 hover:bg-green-700">
+                        Buy a Pass
+                    </a>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Contact Section -->
+    <section id="contact" class="py-20 bg-f7f3e8">
+        <div class="container mx-auto px-6 text-center">
+            <h2 class="text-4xl font-bold mb-12 text-green-800">Get in Touch</h2>
+            <form class="max-w-lg mx-auto bg-white p-8 rounded-lg shadow-xl">
+                <div class="mb-6 text-left">
+                    <label for="name" class="block text-gray-700 font-medium mb-2">Name</label>
+                    <input type="text" id="name" name="name" class="w-full px-4 py-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-green-600 transition duration-200">
+                </div>
+                <div class="mb-6 text-left">
+                    <label for="email" class="block text-gray-700 font-medium mb-2">Email Address</label>
+                    <input type="email" id="email" name="email" class="w-full px-4 py-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-green-600 transition duration-200">
+                </div>
+                <div class="mb-6 text-left">
+                    <label for="message" class="block text-gray-700 font-medium mb-2">Message</label>
+                    <textarea id="message" name="message" rows="5" class="w-full px-4 py-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-green-600 transition duration-200"></textarea>
+                </div>
+                <button type="submit" class="w-full bg-green-800 text-white font-bold py-3 px-8 rounded-full shadow-lg transition transform duration-300 hover:scale-105 hover:bg-green-700">
+                    Send Message
+                </button>
+            </form>
+        </div>
+    </section>
+
+    <!-- Footer -->
+    <footer class="bg-gray-800 text-gray-200 py-8">
+        <div class="container mx-auto px-6 text-center">
+            <p>&copy; 2024 The Yoga Sanctuary. All Rights Reserved.</p>
+        </div>
+    </footer>
+
+    <!-- JavaScript for Mobile Menu -->
+    <script>
+        const mobileMenuBtn = document.getElementById('mobile-menu-btn');
+        const mobileMenu = document.getElementById('mobile-menu');
+
+        mobileMenuBtn.addEventListener('click', () => {
+            mobileMenu.classList.toggle('hidden');
+        });
+
+        // Close menu when a link is clicked
+        mobileMenu.querySelectorAll('a').forEach(link => {
+            link.addEventListener('click', () => {
+                mobileMenu.classList.add('hidden');
+            });
+        });
+
+        // Smooth scrolling for navigation links
+        document.querySelectorAll('a[href^="#"]').forEach(anchor => {
+            anchor.addEventListener('click', function(e) {
+                e.preventDefault();
+                document.querySelector(this.getAttribute('href')).scrollIntoView({
+                    behavior: 'smooth'
+                });
+            });
+        });
+    </script>
+</body>
+
+</html>
