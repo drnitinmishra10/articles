@@ -1,0 +1,320 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Dr. Nitin Mishra's Academic Roadmap</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <!-- Chosen Palette: Warm Neutrals with Teal Accent -->
+    <!-- Application Structure Plan: A dashboard-style single-page application. The top section features a main progress donut chart and key performance indicator (KPI) bars for a quick, high-level overview. The bottom section is divided into two thematic categories ("Research" and "Development") containing interactive cards for each specific objective. This structure was chosen to separate the summary ("what's the progress?") from the details ("how will it be achieved?"), allowing users to quickly gauge status and then drill down into specific strategies. The interactivity (changing status updates the charts) turns a static document into a dynamic tracking tool, which is far more useful for a roadmap. -->
+    <!-- Visualization & Content Choices: 
+        - Overall Progress: Report Info -> 6 total objectives. Goal -> Show overall completion. Viz -> Donut Chart. Interaction -> Updates when any objective's status changes. Justification -> Excellent for part-to-whole relationship visualization. Library -> Chart.js.
+        - Publication Goals: Report Info -> Targets of 5 and 2 papers. Goal -> Show progress to a numerical target. Viz -> Dynamic progress bars. Interaction -> Bar fill reflects the current count (simulated via objective status). Justification -> Intuitive for linear progress tracking. Method -> HTML/CSS/JS.
+        - Other Goals (Funding, Workshops, etc.): Report Info -> Singular, state-based objectives. Goal -> Track completion status. Viz -> Interactive status buttons on cards. Interaction -> Clicking buttons changes status, updates card UI, and recalculates overall progress chart. Justification -> Direct and clear way to manage the state of non-numerical tasks. Method -> HTML/CSS/JS.
+        - Strategies: Report Info -> Bulleted lists of actions. Goal -> Organize and provide details on demand. Viz -> Text list within a collapsible section on each card. Interaction -> Click to toggle visibility. Justification -> Reduces initial UI clutter while keeping details accessible. Method -> HTML/CSS/JS. -->
+    <!-- CONFIRMATION: NO SVG graphics used. NO Mermaid JS used. -->
+    <style>
+        body {
+            font-family: 'Inter', sans-serif;
+            background-color: #f5f5f4; /* stone-100 */
+        }
+        .chart-container {
+            position: relative;
+            width: 100%;
+            max-width: 320px;
+            margin-left: auto;
+            margin-right: auto;
+            height: 320px;
+            max-height: 320px;
+        }
+        .progress-bar-bg {
+            background-color: #e7e5e4; /* stone-200 */
+            border-radius: 9999px;
+            overflow: hidden;
+        }
+        .progress-bar-fill {
+            transition: width 0.5s ease-in-out;
+            border-radius: 9999px;
+        }
+        .status-btn {
+            transition: all 0.2s ease-in-out;
+        }
+        .strategy-content {
+            max-height: 0;
+            overflow: hidden;
+            transition: max-height 0.5s cubic-bezier(0.25, 0.46, 0.45, 0.94);
+        }
+        .strategy-content.open {
+            max-height: 500px; /* Large enough for content */
+        }
+    </style>
+</head>
+<body class="text-stone-800">
+
+    <div id="app" class="container mx-auto p-4 md:p-8">
+        
+        <header class="text-center mb-8 md:mb-12">
+            <h1 class="text-3xl md:text-4xl font-bold text-stone-900">Dr. Nitin Mishra's Academic Roadmap</h1>
+            <p class="text-stone-600 mt-2 text-lg">Interactive dashboard for tracking 2025-2026 professional objectives.</p>
+        </header>
+
+        <main>
+            <section id="dashboard" class="bg-white p-6 rounded-xl shadow-md mb-8 md:mb-12">
+                <h2 class="text-2xl font-bold text-center mb-6 text-stone-900">Progress Overview</h2>
+                <div class="grid grid-cols-1 lg:grid-cols-3 gap-8 items-center">
+                    <div class="lg:col-span-1">
+                        <div class="chart-container">
+                            <canvas id="overallProgressChart"></canvas>
+                        </div>
+                    </div>
+                    <div id="kpi-container" class="lg:col-span-2 space-y-5">
+                        
+                    </div>
+                </div>
+            </section>
+
+            <section id="objectives">
+                <div id="research-section">
+                    <h2 class="text-2xl font-bold mb-6 text-stone-900 border-b-2 border-teal-500 pb-2">
+                        Research & Publications
+                    </h2>
+                    <div id="research-cards" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+                    </div>
+                </div>
+
+                <div id="development-section" class="mt-12">
+                    <h2 class="text-2xl font-bold mb-6 text-stone-900 border-b-2 border-amber-500 pb-2">
+                        Professional Development & Outreach
+                    </h2>
+                    <div id="development-cards" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+                    </div>
+                </div>
+            </section>
+
+        </main>
+    </div>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', () => {
+            const roadmapData = [
+                { id: 1, category: 'research', title: 'Collaborative Publications', goal: 'Publish 5 papers with students in conferences and journals.', strategy: ['Identify and mentor dedicated students for specific research projects.', 'Integrate research topics into B.Tech and M.Tech final-year projects.', 'Guide students on manuscript preparation and submission protocols.'], status: 'In Progress', isQuantitative: true, target: 5, current: 2 },
+                { id: 2, category: 'research', title: 'High-Impact Publications', goal: 'Publish 2 papers in Q1 or Q2 Scopus journals.', strategy: ['Focus research efforts on novel and cutting-edge topics with high potential for impact.', 'Perform a rigorous literature review to ensure originality.', 'Thoroughly revise and refine manuscripts based on peer review feedback.'], status: 'Not Started', isQuantitative: true, target: 2, current: 0 },
+                { id: 3, category: 'research', title: 'Funding Acquisition', goal: 'Apply for External and Internal funding for the research project.', strategy: ['Develop a detailed research proposal outlining the project\'s scope, methodology, and expected outcomes.', 'Identify suitable national and international funding bodies and grant programs.', 'Collaborate with other faculty members to strengthen the proposal.'], status: 'Not Started', isQuantitative: false },
+                { id: 4, category: 'development', title: 'Departmental Workshop', goal: 'Conduct a workshop for the department.', strategy: ['Select a topic of high relevance and practical value for faculty and students (e.g., machine learning, cloud computing, advanced programming).', 'Develop a comprehensive workshop agenda, including hands-on sessions.', 'Coordinate with the department head to schedule and promote the event.'], status: 'Not Started', isQuantitative: false },
+                { id: 5, category: 'development', title: 'Guest Lecture', goal: 'Take a lecture or workshop at another reputed institute or university.', strategy: ['Leverage professional networks to secure an invitation.', 'Prepare a compelling presentation or workshop content that showcases expertise and innovation.', 'Represent Parul University and explore potential collaborations.'], status: 'Completed', isQuantitative: false },
+                { id: 6, category: 'development', title: 'International Conference', goal: 'Attend an International conference as Speaker or technical member.', strategy: ['Submit a paper for consideration for presentation at a top-tier international conference.', 'Engage with the conference community to build new connections.', 'Present research findings and gather feedback from global experts.'], status: 'In Progress', isQuantitative: false },
+            ];
+
+            const statusConfig = {
+                'Not Started': { color: 'stone', ring: 'ring-stone-400', bg: 'bg-stone-100', text: 'text-stone-700', fill: 'bg-stone-400' },
+                'In Progress': { color: 'amber', ring: 'ring-amber-500', bg: 'bg-amber-50', text: 'text-amber-800', fill: 'bg-amber-500' },
+                'Completed': { color: 'teal', ring: 'ring-teal-500', bg: 'bg-teal-50', text: 'text-teal-800', fill: 'bg-teal-500' },
+            };
+
+            let overallProgressChart;
+
+            function getStatusColor(status, type) {
+                return statusConfig[status][type] || 'gray';
+            }
+
+            function renderKPIs() {
+                const kpiContainer = document.getElementById('kpi-container');
+                kpiContainer.innerHTML = '';
+                const quantitativeGoals = roadmapData.filter(item => item.isQuantitative);
+
+                quantitativeGoals.forEach(item => {
+                    const percentage = (item.current / item.target) * 100;
+                    const kpiEl = document.createElement('div');
+                    kpiEl.innerHTML = `
+                        <div>
+                            <div class="flex justify-between items-center mb-1">
+                                <span class="text-base font-medium text-stone-700">${item.title}</span>
+                                <span class="text-sm font-medium ${getStatusColor(item.status, 'text')}">${item.current} / ${item.target}</span>
+                            </div>
+                            <div class="progress-bar-bg w-full h-2.5">
+                                <div class="progress-bar-fill ${getStatusColor('Completed', 'fill')} h-2.5" style="width: ${percentage}%"></div>
+                            </div>
+                        </div>
+                    `;
+                    kpiContainer.appendChild(kpiEl);
+                });
+                 if (quantitativeGoals.length === 0) {
+                     kpiContainer.innerHTML = `<p class="text-stone-500 text-center">No quantitative KPIs to display.</p>`;
+                 }
+            }
+
+            function renderObjectiveCards() {
+                const researchContainer = document.getElementById('research-cards');
+                const developmentContainer = document.getElementById('development-cards');
+                researchContainer.innerHTML = '';
+                developmentContainer.innerHTML = '';
+
+                roadmapData.forEach(item => {
+                    const card = document.createElement('div');
+                    card.className = `objective-card bg-white rounded-xl shadow-md p-5 flex flex-col ring-2 ${getStatusColor(item.status, 'ring')}`;
+                    
+                    const strategyList = item.strategy.map(s => `<li class="text-stone-600">${s}</li>`).join('');
+
+                    card.innerHTML = `
+                        <div class="flex-grow">
+                            <span class="text-sm font-semibold px-3 py-1 rounded-full ${getStatusColor(item.status, 'bg')} ${getStatusColor(item.status, 'text')}">${item.status}</span>
+                            <h3 class="text-lg font-bold mt-3 text-stone-900">${item.title}</h3>
+                            <p class="text-stone-600 mt-1 mb-4">${item.goal}</p>
+                             <button data-strategy-id="${item.id}" class="strategy-toggle text-sm font-semibold text-teal-600 hover:text-teal-800 flex items-center">
+                                View Strategy <span class="ml-1 transform transition-transform">▼</span>
+                             </button>
+                             <div id="strategy-${item.id}" class="strategy-content mt-3">
+                                 <ul class="list-disc list-inside space-y-1 pl-2">
+                                     ${strategyList}
+                                 </ul>
+                             </div>
+                        </div>
+                        <div class="mt-4 pt-4 border-t border-stone-200">
+                            <p class="text-xs text-stone-500 mb-2">Update Status:</p>
+                            <div class="flex items-center space-x-2">
+                                ${Object.keys(statusConfig).map(status => `
+                                    <button data-id="${item.id}" data-status="${status}" class="status-btn text-xs font-medium px-3 py-1 rounded-full ${item.status === status ? `${getStatusColor(status, 'bg')} ${getStatusColor(status, 'text')}` : 'bg-stone-100 text-stone-600 hover:bg-stone-200'}">
+                                        ${status}
+                                    </button>
+                                `).join('')}
+                            </div>
+                        </div>
+                    `;
+
+                    if (item.category === 'research') {
+                        researchContainer.appendChild(card);
+                    } else {
+                        developmentContainer.appendChild(card);
+                    }
+                });
+
+                addEventListeners();
+            }
+
+            function renderChart() {
+                const ctx = document.getElementById('overallProgressChart').getContext('2d');
+                const completed = roadmapData.filter(item => item.status === 'Completed').length;
+                const inProgress = roadmapData.filter(item => item.status === 'In Progress').length;
+                const notStarted = roadmapData.filter(item => item.status === 'Not Started').length;
+                const total = roadmapData.length;
+
+                const chartData = {
+                    labels: ['Completed', 'In Progress', 'Not Started'],
+                    datasets: [{
+                        data: [completed, inProgress, notStarted],
+                        backgroundColor: [
+                            statusConfig['Completed'].fill,
+                            statusConfig['In Progress'].fill,
+                            statusConfig['Not Started'].fill,
+                        ],
+                        borderColor: '#ffffff',
+                        borderWidth: 4,
+                        hoverOffset: 8
+                    }]
+                };
+
+                const centerText = {
+                    id: 'centerText',
+                    afterDraw(chart, args, options){
+                        const {ctx, chartArea: {top, right, bottom, left, width, height}} = chart;
+                        ctx.save();
+                        const completedCount = chart.data.datasets[0].data[0];
+                        const totalCount = chart.data.datasets[0].data.reduce((a, b) => a + b, 0);
+                        const percentage = totalCount > 0 ? ((completedCount / totalCount) * 100).toFixed(0) : 0;
+
+                        ctx.font = 'bold 36px Inter';
+                        ctx.fillStyle = '#1c1917'; // stone-900
+                        ctx.textAlign = 'center';
+                        ctx.textBaseline = 'middle';
+                        ctx.fillText(`${percentage}%`, width / 2, height / 2 + top - 10);
+                        
+                        ctx.font = '500 14px Inter';
+                        ctx.fillStyle = '#57534e'; // stone-600
+                        ctx.fillText('Completed', width / 2, height / 2 + top + 20);
+                        ctx.restore();
+                    }
+                }
+
+                if (overallProgressChart) {
+                    overallProgressChart.data = chartData;
+                    overallProgressChart.update();
+                } else {
+                    overallProgressChart = new Chart(ctx, {
+                        type: 'doughnut',
+                        data: chartData,
+                        options: {
+                            responsive: true,
+                            maintainAspectRatio: false,
+                            cutout: '75%',
+                            plugins: {
+                                legend: {
+                                    display: false
+                                },
+                                tooltip: {
+                                    enabled: true,
+                                    callbacks: {
+                                        label: function(context) {
+                                            let label = context.label || '';
+                                            if (label) {
+                                                label += ': ';
+                                            }
+                                            if (context.parsed !== null) {
+                                                label += `${context.parsed} Objective(s)`;
+                                            }
+                                            return label;
+                                        }
+                                    }
+                                }
+                            }
+                        },
+                        plugins: [centerText]
+                    });
+                }
+            }
+            
+            function addEventListeners() {
+                document.querySelectorAll('.status-btn').forEach(button => {
+                    button.addEventListener('click', (e) => {
+                        const id = parseInt(e.target.dataset.id);
+                        const newStatus = e.target.dataset.status;
+                        const item = roadmapData.find(d => d.id === id);
+                        if (item) {
+                            item.status = newStatus;
+                            // Simulate quantitative progress update
+                            if (item.isQuantitative) {
+                                if (newStatus === 'Completed') item.current = item.target;
+                                else if (newStatus === 'In Progress' && item.current === 0) item.current = Math.floor(item.target / 2) || 1;
+                                else if (newStatus === 'In Progress' && item.current === item.target) item.current = Math.floor(item.target / 2) || 1;
+                                else if (newStatus === 'Not Started') item.current = 0;
+                            }
+                            updateApp();
+                        }
+                    });
+                });
+                
+                document.querySelectorAll('.strategy-toggle').forEach(button => {
+                    button.addEventListener('click', e => {
+                        const id = e.currentTarget.dataset.strategyId;
+                        const content = document.getElementById(`strategy-${id}`);
+                        const icon = e.currentTarget.querySelector('span');
+                        content.classList.toggle('open');
+                        icon.style.transform = content.classList.contains('open') ? 'rotate(180deg)' : 'rotate(0deg)';
+                    });
+                });
+            }
+
+            function updateApp() {
+                renderObjectiveCards();
+                renderKPIs();
+                renderChart();
+            }
+
+            updateApp();
+        });
+    </script>
+</body>
+</html>
